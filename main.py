@@ -9,11 +9,11 @@ PASSWORD = "ctucl2021@"
 TOPIC = "paltas_sn/commands"
 
 
-query_commands = ['generate_normal_pass','test_lock','test_arrow']
 
-def api_query(param):
-    url = "http://localhost:5000/api/mecanism"
-    payload = {"operation": param}
+
+def api_query(command,path):
+    url = f"http://localhost:5000/api/{path}"
+    payload = {"operation": command}
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)  # Usa `json=payload` en lugar de `data`
     print(response.text)
@@ -24,10 +24,10 @@ def on_message(client, userdata, message):
     try:
         data_dict = json.loads(data_received)  # Convertir string JSON a diccionario
         command = str(data_dict.get('command')) # Obtener el valor de 'command'
-        param = data_dict.get('param')  # Obtener el valor de 'param' por si se ocupa en algun punto
+        path = str(data_dict.get('path'))  # Obtener el valor de 'param' por si se ocupa en algun punto
         print(command)
-        if command in query_commands:
-            api_query(command)
+        if command != "":
+            api_query(command,path)
         else:
             pass
     except json.JSONDecodeError:
