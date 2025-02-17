@@ -9,27 +9,27 @@ PASSWORD = "ctucl2021@"
 TOPIC = "paltas_sn/commands"
 
 
-def generate_pass():
-    url = "http://localhost:5000/api/mecanism"
+query_commands = ['generate_normal_pass','test_lock','test_arrow']
 
-    payload = {"operation":"generate_normal_pass"}
-    headers = {
-    'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
-    }
-    response = requests.request("POST", url, headers=headers, data=payload)
+def api_query(param):
+    url = "http://localhost:5000/api/mecanism"
+    payload = {"operation": param}
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, json=payload)  # Usa `json=payload` en lugar de `data`
     print(response.text)
-        
 
 #aqui abajo ira toda la logica para ejecutar una funcion
 def on_message(client, userdata, message):
     data_received = message.payload.decode()
     try:
         data_dict = json.loads(data_received)  # Convertir string JSON a diccionario
-        command = data_dict.get('command')  # Obtener el valor de 'command'
+        command = str(data_dict.get('command')) # Obtener el valor de 'command'
         param = data_dict.get('param')  # Obtener el valor de 'param' por si se ocupa en algun punto
         print(command)
-        if str(command) == "generate_pass":
-            generate_pass()
+        if command in query_commands:
+            api_query(command)
+        else:
+            pass
     except json.JSONDecodeError:
         print("Error: el mensaje recibido no es un JSON válido")
 
