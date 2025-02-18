@@ -1,14 +1,15 @@
 import paho.mqtt.client as mqtt
 import json
 import requests
-# Configuración del broker
-BROKER_URL = "ae1dd77d.ala.us-east-1.emqxsl.com"
-BROKER_PORT = 8883
-USERNAME = "paltas_sn"
-PASSWORD = "ctucl2021@"
-TOPIC = "paltas_sn/commands"
-
-
+from dotenv import load_dotenv
+import os
+# Corgar variables desde un archivo .env
+load_dotenv()
+BROKER_URL = os.getenv("BROKER_URL")
+BROKER_PORT = int(os.getenv("BROKER_PORT"))
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
+TOPIC = os.getenv("TOPIC")
 
 
 def api_query(command,path):
